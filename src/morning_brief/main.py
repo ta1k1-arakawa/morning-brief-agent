@@ -6,6 +6,11 @@ from typing import Protocol
 from morning_brief.config import AppConfig, ConfigError, load_config
 from morning_brief.core.collector import BriefCollector, CollectedBriefData
 from morning_brief.core.summarizer import BriefSummarizer, SummaryResult
+from morning_brief.services.gmail import GmailService
+from morning_brief.services.google_calendar import GoogleCalendarService
+from morning_brief.services.openai_client import OpenAIClient
+from morning_brief.services.slack import SlackWebhookNotifier
+from morning_brief.services.todoist import TodoistService
 from morning_brief.utils.logging import configure_logging, get_logger
 
 
@@ -40,11 +45,44 @@ def run(services: AppServices) -> SummaryResult:
 
 
 def build_services(config: AppConfig) -> AppServices:
-    _ = config
-    raise NotImplementedError(
-        "Service clients are not implemented yet. "
-        "Create services/google_calendar.py, services/gmail.py, "
-        "services/todoist.py, services/openai_client.py, and services/slack.py first."
+    calendar_service = GoogleCalendarService(
+        client_secret_file=config.google_client_secret_file,
+        token_file=config.google_token_file,
+        timezone=config.timezone,
+        lookahead_days=config.calendar_lookahead_days,
+    )
+    gmail_service = GmailService(
+        client_secret_file=config.google_client_secret_file,
+        token_file=config.google_token_file,
+        timezone=config.timezone,
+        max_results=config.gmail_max_results,
+    )
+    todoist_service = TodoistService(
+        api_token=config.todoist_api_token,
+        timezone=config.timezone,
+        timeout_seconds=config.request_timeout_seconds,
+    )
+    openai_client = OpenAIClient(
+        api_key=config.openai_api_key,
+        model=config.openai_model,
+        timeout_seconds=config.request_timeout_seconds,
+    )
+    slack_notifier = SlackWebhookNotifier(
+        webhook_url=config.slack_webhook_url,
+        timeout_seconds=config.request_timeout_seconds,
+    )
+
+    collector = BriefCollector(
+        calendar_service=calendar_service,
+        gmail_service=gmail_service,
+        todoist_service=todoist_service,
+    )
+    summarizer = BriefSummarizer(openai_client=openai_client)
+
+    return AppServices(
+        collector=collector,
+        summarizer=summarizer,
+        slack_notifier=slack_notifier,
     )
 
 
@@ -58,9 +96,6 @@ def main() -> int:
     except ConfigError as exc:
         logger.error("Configuration error: %s", exc)
         return 2
-    except NotImplementedError as exc:
-        logger.error("%s", exc)
-        return 3
     except Exception:
         logger.exception("Morning brief failed")
         return 1
