@@ -21,7 +21,7 @@ ENV/
 !.env.example
 client_secret*.json
 credentials*.json
-token*.json
+*token.json
 google_token*.pickle
 gmail_token*.pickle
 calendar_token*.pickle
