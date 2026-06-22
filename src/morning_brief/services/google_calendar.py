@@ -15,9 +15,8 @@ from morning_brief.models import CalendarEvent
 from morning_brief.utils.datetime_utils import calendar_time_window
 
 
-GOOGLE_READONLY_SCOPES = (
+GOOGLE_CALENDAR_READONLY_SCOPES = (
     "https://www.googleapis.com/auth/calendar.readonly",
-    "https://www.googleapis.com/auth/gmail.readonly",
 )
 
 
@@ -64,7 +63,7 @@ class GoogleCalendarService:
         if token_path.exists():
             credentials = Credentials.from_authorized_user_file(
                 str(token_path),
-                GOOGLE_READONLY_SCOPES,
+                GOOGLE_CALENDAR_READONLY_SCOPES,
             )
 
         if credentials and credentials.expired and credentials.refresh_token:
@@ -72,7 +71,7 @@ class GoogleCalendarService:
         elif not credentials or not credentials.valid:
             flow = InstalledAppFlow.from_client_secrets_file(
                 self.client_secret_file,
-                GOOGLE_READONLY_SCOPES,
+                GOOGLE_CALENDAR_READONLY_SCOPES,
             )
             credentials = flow.run_local_server(port=0)
 

@@ -12,6 +12,8 @@ DEFAULT_OPENAI_MODEL = "gpt-5-mini"
 DEFAULT_GMAIL_MAX_RESULTS = 10
 DEFAULT_CALENDAR_LOOKAHEAD_DAYS = 2
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 30
+DEFAULT_GOOGLE_CALENDAR_TOKEN_FILE = "calendar_token.json"
+DEFAULT_GMAIL_TOKEN_FILE = "gmail_token.json"
 
 
 class ConfigError(RuntimeError):
@@ -24,7 +26,8 @@ class AppConfig:
     slack_webhook_url: str
     todoist_api_token: str
     google_client_secret_file: str
-    google_token_file: str = "token.json"
+    google_calendar_token_file: str = DEFAULT_GOOGLE_CALENDAR_TOKEN_FILE
+    gmail_token_file: str = DEFAULT_GMAIL_TOKEN_FILE
     timezone: str = DEFAULT_TIMEZONE
     openai_model: str = DEFAULT_OPENAI_MODEL
     gmail_max_results: int = DEFAULT_GMAIL_MAX_RESULTS
@@ -69,7 +72,16 @@ def load_config(
         slack_webhook_url=_get_string(source, "SLACK_WEBHOOK_URL"),
         todoist_api_token=_get_string(source, "TODOIST_API_TOKEN"),
         google_client_secret_file=_get_string(source, "GOOGLE_CLIENT_SECRET_FILE"),
-        google_token_file=_get_string(source, "GOOGLE_TOKEN_FILE", "token.json"),
+        google_calendar_token_file=_get_string(
+            source,
+            "GOOGLE_CALENDAR_TOKEN_FILE",
+            DEFAULT_GOOGLE_CALENDAR_TOKEN_FILE,
+        ),
+        gmail_token_file=_get_string(
+            source,
+            "GMAIL_TOKEN_FILE",
+            DEFAULT_GMAIL_TOKEN_FILE,
+        ),
         timezone=_get_string(source, "APP_TIMEZONE", DEFAULT_TIMEZONE),
         openai_model=_get_string(source, "OPENAI_MODEL", DEFAULT_OPENAI_MODEL),
         gmail_max_results=_get_int(

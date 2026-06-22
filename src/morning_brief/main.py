@@ -47,13 +47,13 @@ def run(services: AppServices) -> SummaryResult:
 def build_services(config: AppConfig) -> AppServices:
     calendar_service = GoogleCalendarService(
         client_secret_file=config.google_client_secret_file,
-        token_file=config.google_token_file,
+        token_file=config.google_calendar_token_file,
         timezone=config.timezone,
         lookahead_days=config.calendar_lookahead_days,
     )
     gmail_service = GmailService(
         client_secret_file=config.google_client_secret_file,
-        token_file=config.google_token_file,
+        token_file=config.gmail_token_file,
         timezone=config.timezone,
         max_results=config.gmail_max_results,
     )

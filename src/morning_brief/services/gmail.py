@@ -16,8 +16,7 @@ from morning_brief.models import EmailItem
 from morning_brief.utils.datetime_utils import format_datetime
 
 
-GOOGLE_READONLY_SCOPES = (
-    "https://www.googleapis.com/auth/calendar.readonly",
+GMAIL_READONLY_SCOPES = (
     "https://www.googleapis.com/auth/gmail.readonly",
 )
 BRIEF_QUERY = "is:unread OR is:important"
@@ -65,11 +64,11 @@ class GmailService:
         if token_path.exists():
             credentials = Credentials.from_authorized_user_file(
                 str(token_path),
-                GOOGLE_READONLY_SCOPES,
+                GMAIL_READONLY_SCOPES,
             )
 
         has_required_scopes = bool(
-            credentials and credentials.has_scopes(GOOGLE_READONLY_SCOPES)
+            credentials and credentials.has_scopes(GMAIL_READONLY_SCOPES)
         )
 
         if (
@@ -83,7 +82,7 @@ class GmailService:
         if not credentials or not credentials.valid or not has_required_scopes:
             flow = InstalledAppFlow.from_client_secrets_file(
                 self.client_secret_file,
-                GOOGLE_READONLY_SCOPES,
+                GMAIL_READONLY_SCOPES,
             )
             credentials = flow.run_local_server(port=0)
 

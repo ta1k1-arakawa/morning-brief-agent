@@ -25,7 +25,11 @@ Gmailの本文全文は取得しません。送信者、件名、受信日時、
 
 Google Cloudでは、Google Calendar APIとGmail APIを有効にしてください。
 OAuthクライアントのJSONファイルは、このリポジトリのルートへ
-`credentials.json` などの名前で保存します。
+`credentials.json` などの名前で保存します。このファイルはアプリ自体を識別する
+ためのものなので、CalendarとGmailで共通のファイルを利用できます。
+
+CalendarとGmailは別々のGoogleアカウントで利用できます。OAuth同意画面が
+テスト状態の場合は、両方のアカウントをテストユーザーとして登録してください。
 
 ## セットアップ
 
@@ -46,7 +50,8 @@ OPENAI_MODEL=gpt-5-mini
 SLACK_WEBHOOK_URL=
 TODOIST_API_TOKEN=
 GOOGLE_CLIENT_SECRET_FILE=credentials.json
-GOOGLE_TOKEN_FILE=token.json
+GOOGLE_CALENDAR_TOKEN_FILE=calendar_token.json
+GMAIL_TOKEN_FILE=gmail_token.json
 APP_TIMEZONE=Asia/Tokyo
 GMAIL_MAX_RESULTS=10
 CALENDAR_LOOKAHEAD_DAYS=2
@@ -64,7 +69,8 @@ REQUEST_TIMEOUT_SECONDS=30
 | `SLACK_WEBHOOK_URL` | はい | Slack Incoming Webhook URL | なし |
 | `TODOIST_API_TOKEN` | はい | Todoist APIトークン | なし |
 | `GOOGLE_CLIENT_SECRET_FILE` | はい | Google OAuthクライアントJSONのパス | なし |
-| `GOOGLE_TOKEN_FILE` | いいえ | Google認証トークンの保存先 | `token.json` |
+| `GOOGLE_CALENDAR_TOKEN_FILE` | いいえ | Calendarアカウントの認証トークン保存先 | `calendar_token.json` |
+| `GMAIL_TOKEN_FILE` | いいえ | Gmailアカウントの認証トークン保存先 | `gmail_token.json` |
 | `APP_TIMEZONE` | いいえ | 日付判定に使うタイムゾーン | `Asia/Tokyo` |
 | `GMAIL_MAX_RESULTS` | いいえ | 取得するメールの最大件数 | `10` |
 | `CALENDAR_LOOKAHEAD_DAYS` | いいえ | 今日から何日分の予定を取得するか | `2` |
@@ -75,11 +81,19 @@ OSの環境変数と `.env` の両方に同じ名前がある場合は、OSの�
 
 ## Googleの初回認証
 
-初回実行時はブラウザが開き、Googleアカウントへのログインと権限の確認を
-求められます。要求する権限はCalendarとGmailの読み取り専用です。
+初回実行時は、CalendarとGmailの認証のためにブラウザが順番に開きます。
 
-認証が完了すると `token.json` が作られます。2回目以降はこのファイルを使い、
-有効期限が切れたアクセストークンは可能な場合に自動更新します。
+1. Calendarで使うGoogleアカウントへログインし、Calendarの読み取り権限を許可する
+2. Gmailで使うGoogleアカウントへログインし、Gmailの読み取り権限を許可する
+
+アカウントを選択するときは、サービスごとに正しいアカウントであることを確認して
+ください。認証が完了すると、次の2ファイルが作られます。
+
+- `calendar_token.json`
+- `gmail_token.json`
+
+2回目以降はそれぞれのトークンファイルを使います。有効期限が切れたアクセス
+トークンは、可能な場合に自動更新します。
 
 ## 実行方法
 
@@ -123,11 +137,13 @@ Todoist ─────────┘
 - `SLACK_WEBHOOK_URL`
 - `TODOIST_API_TOKEN`
 - `GOOGLE_CLIENT_SECRET_JSON`
-- `GOOGLE_TOKEN_JSON`
+- `GOOGLE_CALENDAR_TOKEN_JSON`
+- `GMAIL_TOKEN_JSON`
 
 `GOOGLE_CLIENT_SECRET_JSON` にはOAuthクライアントJSON、
-`GOOGLE_TOKEN_JSON` にはローカルの初回認証で作成された `token.json` の内容を
-登録します。ワークフローは実行時に一時ファイルへ復元して利用します。
+`GOOGLE_CALENDAR_TOKEN_JSON` と `GMAIL_TOKEN_JSON` には、ローカルの初回認証で
+作成された対応するトークンファイルの内容を登録します。ワークフローは実行時に
+一時ファイルへ復元して利用します。
 
 GitHub ActionsのcronはUTC基準です。日本時間で設定するときは、UTCとの時差を
 考慮してください。
@@ -135,7 +151,8 @@ GitHub ActionsのcronはUTC基準です。日本時間で設定するときは�
 ## セキュリティ
 
 - APIキー、Webhook URL、Google認証JSONをコードへ直接書かないでください。
-- `.env`、`credentials.json`、`token.json` はGitへコミットしないでください。
+- `.env`、`credentials.json`、`calendar_token.json`、`gmail_token.json` はGitへ
+  コミットしないでください。
 - Slackへ送るチャンネルには、必要な人だけがアクセスできるようにしてください。
 - Gmail本文を推測したり、取得していない情報を断定したりしません。
 - 認証情報を誤って公開した場合は、該当サービスで直ちに無効化・再発行してください。
