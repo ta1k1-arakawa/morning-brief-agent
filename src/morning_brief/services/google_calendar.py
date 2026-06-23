@@ -14,7 +14,6 @@ from googleapiclient.errors import HttpError
 from morning_brief.models import CalendarEvent
 from morning_brief.utils.datetime_utils import calendar_time_window
 
-
 GOOGLE_CALENDAR_READONLY_SCOPES = (
     "https://www.googleapis.com/auth/calendar.readonly",
 )

@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping
 
-
 DEFAULT_ENV_FILE = ".env"
 DEFAULT_TIMEZONE = "Asia/Tokyo"
 DEFAULT_OPENAI_MODEL = "gpt-5-mini"

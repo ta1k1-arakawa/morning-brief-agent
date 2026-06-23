@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
-
 DEFAULT_TIMEZONE = "Asia/Tokyo"
 
 

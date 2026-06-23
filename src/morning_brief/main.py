@@ -13,7 +13,6 @@ from morning_brief.services.slack import SlackWebhookNotifier
 from morning_brief.services.todoist import TodoistService
 from morning_brief.utils.logging import configure_logging, get_logger
 
-
 logger = get_logger(__name__)
 
 

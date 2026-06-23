@@ -15,7 +15,6 @@ from googleapiclient.errors import HttpError
 from morning_brief.models import EmailItem
 from morning_brief.utils.datetime_utils import format_datetime
 
-
 GMAIL_READONLY_SCOPES = (
     "https://www.googleapis.com/auth/gmail.readonly",
 )
