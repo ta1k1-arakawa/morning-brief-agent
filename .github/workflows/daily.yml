@@ -1,0 +1,76 @@
+name: Daily Morning Brief
+
+on:
+  schedule:
+    # 22:00 UTC is 07:00 JST on the following day.
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-morning-brief
+  cancel-in-progress: false
+
+jobs:
+  send-morning-brief:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install application
+        run: python -m pip install .
+
+      - name: Restore Google credentials
+        env:
+          GOOGLE_CLIENT_SECRET_JSON: ${{ secrets.GOOGLE_CLIENT_SECRET_JSON }}
+          GOOGLE_CALENDAR_TOKEN_JSON: ${{ secrets.GOOGLE_CALENDAR_TOKEN_JSON }}
+          GMAIL_TOKEN_JSON: ${{ secrets.GMAIL_TOKEN_JSON }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          secret_files = {
+              "GOOGLE_CLIENT_SECRET_JSON": "credentials.json",
+              "GOOGLE_CALENDAR_TOKEN_JSON": "calendar_token.json",
+              "GMAIL_TOKEN_JSON": "gmail_token.json",
+          }
+
+          for environment_name, file_name in secret_files.items():
+              value = os.environ.get(environment_name)
+              if not value:
+                  raise RuntimeError(f"{environment_name} is not configured")
+
+              parsed = json.loads(value)
+              Path(file_name).write_text(
+                  json.dumps(parsed),
+                  encoding="utf-8",
+              )
+          PY
+
+      - name: Generate and send morning brief
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          TODOIST_API_TOKEN: ${{ secrets.TODOIST_API_TOKEN }}
+          GOOGLE_CLIENT_SECRET_FILE: credentials.json
+          GOOGLE_CALENDAR_TOKEN_FILE: calendar_token.json
+          GMAIL_TOKEN_FILE: gmail_token.json
+          OPENAI_MODEL: gpt-5-mini
+          APP_TIMEZONE: Asia/Tokyo
+          GMAIL_MAX_RESULTS: "50"
+          CALENDAR_LOOKAHEAD_DAYS: "2"
+          REQUEST_TIMEOUT_SECONDS: "120"
+        run: morning-brief
