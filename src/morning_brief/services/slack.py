@@ -37,7 +37,9 @@ class SlackWebhookNotifier:
                 f"Slack webhook returned HTTP {exc.code}"
             ) from exc
         except URLError as exc:
-            raise SlackNotificationError(f"Failed to call Slack webhook: {exc}") from exc
+            raise SlackNotificationError(
+                f"Failed to call Slack webhook: {exc}"
+            ) from exc
 
         if status >= 400:
             raise SlackNotificationError(f"Slack webhook returned HTTP {status}")
