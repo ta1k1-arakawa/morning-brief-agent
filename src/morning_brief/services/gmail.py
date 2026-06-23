@@ -18,7 +18,7 @@ from morning_brief.utils.datetime_utils import format_datetime
 GMAIL_READONLY_SCOPES = (
     "https://www.googleapis.com/auth/gmail.readonly",
 )
-BRIEF_QUERY = "is:unread OR is:important"
+BRIEF_QUERY = "newer_than:1d OR is:unread OR is:important"
 
 
 class GmailServiceError(RuntimeError):
