@@ -12,7 +12,7 @@ from morning_brief.models import TodoistTask
 from morning_brief.utils.datetime_utils import today_in_timezone
 
 TODOIST_API_BASE_URL = "https://api.todoist.com/api/v1"
-BRIEF_FILTER = "today | overdue | p1 | p2"
+BRIEF_FILTER = "#インボックス & (today | overdue | p1 | p2)"
 
 
 class TodoistServiceError(RuntimeError):
