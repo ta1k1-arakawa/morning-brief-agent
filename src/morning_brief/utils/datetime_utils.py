@@ -33,10 +33,6 @@ def today_in_timezone(timezone: str = DEFAULT_TIMEZONE) -> date:
     return now_in_timezone(timezone).date()
 
 
-def tomorrow_in_timezone(timezone: str = DEFAULT_TIMEZONE) -> date:
-    return today_in_timezone(timezone) + timedelta(days=1)
-
-
 def day_range(
     target_date: date | None = None,
     timezone: str = DEFAULT_TIMEZONE,
@@ -47,20 +43,6 @@ def day_range(
     end = start + timedelta(days=1)
 
     return DateTimeRange(start=start, end=end)
-
-
-def calendar_time_window(
-    days: int,
-    timezone: str = DEFAULT_TIMEZONE,
-) -> DateTimeRange:
-    if days < 1:
-        raise ValueError("days must be at least 1")
-
-    start = day_range(timezone=timezone).start
-    end = start + timedelta(days=days)
-
-    return DateTimeRange(start=start, end=end)
-
 
 def format_date(value: date) -> str:
     return value.strftime("%Y-%m-%d")

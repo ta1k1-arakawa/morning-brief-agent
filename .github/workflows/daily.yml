@@ -71,6 +71,5 @@ jobs:
           OPENAI_MODEL: gpt-5-mini
           APP_TIMEZONE: Asia/Tokyo
           GMAIL_MAX_RESULTS: "50"
-          CALENDAR_LOOKAHEAD_DAYS: "2"
           REQUEST_TIMEOUT_SECONDS: "120"
         run: morning-brief

@@ -56,7 +56,6 @@ def build_services(config: AppConfig) -> AppServices:
         client_secret_file=config.google_client_secret_file,
         token_file=config.google_calendar_token_file,
         timezone=config.timezone,
-        lookahead_days=config.calendar_lookahead_days,
     )
     gmail_service = GmailService(
         client_secret_file=config.google_client_secret_file,

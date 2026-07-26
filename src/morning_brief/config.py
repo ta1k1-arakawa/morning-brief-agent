@@ -9,7 +9,6 @@ DEFAULT_ENV_FILE = ".env"
 DEFAULT_TIMEZONE = "Asia/Tokyo"
 DEFAULT_OPENAI_MODEL = "gpt-5-mini"
 DEFAULT_GMAIL_MAX_RESULTS = 10
-DEFAULT_CALENDAR_LOOKAHEAD_DAYS = 2
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 30
 DEFAULT_GOOGLE_CALENDAR_TOKEN_FILE = "calendar_token.json"
 DEFAULT_GMAIL_TOKEN_FILE = "gmail_token.json"
@@ -30,7 +29,6 @@ class AppConfig:
     timezone: str = DEFAULT_TIMEZONE
     openai_model: str = DEFAULT_OPENAI_MODEL
     gmail_max_results: int = DEFAULT_GMAIL_MAX_RESULTS
-    calendar_lookahead_days: int = DEFAULT_CALENDAR_LOOKAHEAD_DAYS
     request_timeout_seconds: int = DEFAULT_REQUEST_TIMEOUT_SECONDS
 
     @property
@@ -87,12 +85,6 @@ def load_config(
             source,
             "GMAIL_MAX_RESULTS",
             DEFAULT_GMAIL_MAX_RESULTS,
-            min_value=1,
-        ),
-        calendar_lookahead_days=_get_int(
-            source,
-            "CALENDAR_LOOKAHEAD_DAYS",
-            DEFAULT_CALENDAR_LOOKAHEAD_DAYS,
             min_value=1,
         ),
         request_timeout_seconds=_get_int(

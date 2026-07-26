@@ -5,7 +5,7 @@ Google Calendar、Gmail、Todoistに分散している情報を集め、OpenAI A
 
 ## できること
 
-- Google Calendarから今日・明日の予定を取得する
+- Google Calendarから今日の予定を取得する
 - Gmailから未読または重要なメールの概要を取得する
 - Todoistから今日・期限切れ・高優先度のタスクを取得する
 - OpenAI APIで日本語の行動サマリーを作る
@@ -54,7 +54,6 @@ GOOGLE_CALENDAR_TOKEN_FILE=calendar_token.json
 GMAIL_TOKEN_FILE=gmail_token.json
 APP_TIMEZONE=Asia/Tokyo
 GMAIL_MAX_RESULTS=10
-CALENDAR_LOOKAHEAD_DAYS=2
 REQUEST_TIMEOUT_SECONDS=30
 ```
 
@@ -73,7 +72,6 @@ REQUEST_TIMEOUT_SECONDS=30
 | `GMAIL_TOKEN_FILE` | いいえ | Gmailアカウントの認証トークン保存先 | `gmail_token.json` |
 | `APP_TIMEZONE` | いいえ | 日付判定に使うタイムゾーン | `Asia/Tokyo` |
 | `GMAIL_MAX_RESULTS` | いいえ | 取得するメールの最大件数 | `10` |
-| `CALENDAR_LOOKAHEAD_DAYS` | いいえ | 今日から何日分の予定を取得するか | `2` |
 | `REQUEST_TIMEOUT_SECONDS` | いいえ | 外部API通信のタイムアウト秒数 | `30` |
 
 OSの環境変数と `.env` の両方に同じ名前がある場合は、OSの環境変数が

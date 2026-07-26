@@ -12,7 +12,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from morning_brief.models import CalendarEvent
-from morning_brief.utils.datetime_utils import calendar_time_window
+from morning_brief.utils.datetime_utils import day_range
 
 GOOGLE_CALENDAR_READONLY_SCOPES = (
     "https://www.googleapis.com/auth/calendar.readonly",
@@ -28,12 +28,8 @@ class GoogleCalendarService:
     client_secret_file: str
     token_file: str = "token.json"
     timezone: str = "Asia/Tokyo"
-    lookahead_days: int = 2
 
     def get_events_for_brief(self) -> tuple[CalendarEvent, ...]:
-        if self.lookahead_days < 1:
-            raise GoogleCalendarServiceError("lookahead_days must be at least 1")
-
         try:
             credentials = self._load_credentials()
             service = build(
@@ -79,10 +75,7 @@ class GoogleCalendarService:
         return credentials
 
     def _get_all_event_pages(self, service: Any) -> list[dict[str, Any]]:
-        time_window = calendar_time_window(
-            days=self.lookahead_days,
-            timezone=self.timezone,
-        )
+        time_window = day_range(timezone=self.timezone)
         items: list[dict[str, Any]] = []
         page_token: str | None = None
 
