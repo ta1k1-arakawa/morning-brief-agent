@@ -46,7 +46,7 @@ pip install -e ".[dev]"
 
 ```dotenv
 OPENAI_API_KEY=
-OPENAI_MODEL=gpt-5-mini
+OPENAI_MODEL=gpt-5.6-luna
 SLACK_WEBHOOK_URL=
 TODOIST_API_TOKEN=
 GOOGLE_CLIENT_SECRET_FILE=credentials.json
@@ -64,7 +64,7 @@ REQUEST_TIMEOUT_SECONDS=30
 | 名前 | 必須 | 内容 | 既定値 |
 | --- | --- | --- | --- |
 | `OPENAI_API_KEY` | はい | OpenAI APIキー | なし |
-| `OPENAI_MODEL` | いいえ | サマリー生成に使うモデル | `gpt-5-mini` |
+| `OPENAI_MODEL` | いいえ | サマリー生成に使うモデル | `gpt-5.6-luna` |
 | `SLACK_WEBHOOK_URL` | はい | Slack Incoming Webhook URL | なし |
 | `TODOIST_API_TOKEN` | はい | Todoist APIトークン | なし |
 | `GOOGLE_CLIENT_SECRET_FILE` | はい | Google OAuthクライアントJSONのパス | なし |
