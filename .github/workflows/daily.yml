@@ -2,8 +2,8 @@ name: Daily Morning Brief
 
 on:
   schedule:
-    # 22:00 UTC is 07:00 JST on the following day.
-    - cron: "0 22 * * *"
+    # 22:07 UTC is 07:07 JST on the following day.
+    - cron: "7 22 * * *"
   workflow_dispatch:
 
 permissions:
